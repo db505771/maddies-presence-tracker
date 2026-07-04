@@ -90,11 +90,13 @@
             100% { transform: scale(0.9); opacity: 0.6; }
         }
 
+        /* Fixed container dimensions so UI size stays perfectly locked */
         .session-container {
             display: flex;
             align-items: center;
             gap: 20px;
             margin-top: 15px;
+            height: 110px; 
         }
 
         .game-thumbnail {
@@ -104,13 +106,20 @@
             object-fit: cover;
             border: 2px solid rgba(255, 255, 255, 0.05);
             background-color: #18181b;
-            display: block; /* Managed dynamically via JS handles */
+            display: block; 
         }
 
         .details {
             flex: 1;
             display: flex;
             flex-direction: column;
+            transition: text-align 0.3s ease;
+        }
+
+        /* Helper class injected dynamically via JS to center contents */
+        .details.centered {
+            text-align: center;
+            padding-right: 0;
         }
 
         .status-label {
@@ -131,7 +140,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 260px;
+            max-width: 100%;
         }
 
         .duration-container {
@@ -172,7 +181,7 @@
         <div class="session-container">
             <img id="display-icon" class="game-thumbnail" src="https://via.placeholder.com/150/18181b/71717a?text=..." alt="Game Icon">
             
-            <div class="details">
+            <div id="details-box" class="details">
                 <h2 id="display-name" class="game-name">Loading...</h2>
                 <span id="display-details" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Connecting to micro-API...</span>
             </div>
@@ -238,6 +247,7 @@
                 const iconImg = document.getElementById('display-icon');
                 const durationLabel = document.getElementById('duration-label');
                 const durationWrapper = document.getElementById('duration-wrapper');
+                const detailsBox = document.getElementById('details-box');
 
                 iconImg.src = data.image;
                 nameText.innerText = data.gameName;
@@ -246,13 +256,17 @@
                     durationWrapper.style.display = "flex";
 
                     if (currentStatus === "in game") {
-                        iconImg.style.display = "block"; // 🟢 Show icon layout when in-game
+                        iconImg.style.display = "block"; 
+                        detailsBox.classList.remove('centered'); // Reset to standard side-by-side flex alignment
+                        
                         badge.className = "live-badge badge-ingame";
                         statusText.innerText = "In Game";
                         detailsText.innerText = "Currently playing Roblox";
                         durationLabel.innerText = "Duration:";
                     } else {
-                        iconImg.style.display = "none";  // 🔵 Hide icon layout when browsing online
+                        iconImg.style.display = "none";  
+                        detailsBox.classList.add('centered'); // Apply centering rules
+                        
                         badge.className = "live-badge badge-online";
                         statusText.innerText = "Online";
                         detailsText.innerText = "Active on the platform";
@@ -267,7 +281,8 @@
                     lastGameId = data.gameId;
 
                 } else {
-                    iconImg.style.display = "none";  // ⚪ Hide icon layout when completely offline
+                    iconImg.style.display = "none";  
+                    detailsBox.classList.add('centered'); // Apply centering rules
                     durationWrapper.style.display = "none";
 
                     badge.className = "live-badge badge-offline";
