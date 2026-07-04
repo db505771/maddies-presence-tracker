@@ -252,12 +252,20 @@
                 iconImg.src = data.image;
                 nameText.innerText = data.gameName;
 
-                if ((currentStatus === "in game" || currentStatus === "online") && data.startTime) {
-                    durationWrapper.style.display = "flex";
+                if (currentStatus === "in game" || currentStatus === "online") {
+                    
+                    // Stopwatch visibility logic isolated safely inside status checks
+                    if (data.startTime) {
+                        durationWrapper.style.display = "flex";
+                        startClock(data.startTime);
+                    } else {
+                        durationWrapper.style.display = "none";
+                        stopClock();
+                    }
 
                     if (currentStatus === "in game") {
                         iconImg.style.display = "block"; 
-                        detailsBox.classList.remove('centered'); // Reset to standard side-by-side flex alignment
+                        detailsBox.classList.remove('centered');
                         
                         badge.className = "live-badge badge-ingame";
                         statusText.innerText = "In Game";
@@ -265,15 +273,13 @@
                         durationLabel.innerText = "Duration:";
                     } else {
                         iconImg.style.display = "none";  
-                        detailsBox.classList.add('centered'); // Apply centering rules
+                        detailsBox.classList.add('centered');
                         
                         badge.className = "live-badge badge-online";
                         statusText.innerText = "Online";
                         detailsText.innerText = "Active on the platform";
                         durationLabel.innerText = "Online Time:";
                     }
-
-                    startClock(data.startTime);
 
                     if (currentStatus === "in game" && lastGameId !== null && lastGameId !== data.gameId) {
                         triggerSwitchAnimation();
@@ -282,7 +288,7 @@
 
                 } else {
                     iconImg.style.display = "none";  
-                    detailsBox.classList.add('centered'); // Apply centering rules
+                    detailsBox.classList.add('centered');
                     durationWrapper.style.display = "none";
 
                     badge.className = "live-badge badge-offline";
