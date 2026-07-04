@@ -104,6 +104,7 @@
             object-fit: cover;
             border: 2px solid rgba(255, 255, 255, 0.05);
             background-color: #18181b;
+            display: block; /* Managed dynamically via JS handles */
         }
 
         .details {
@@ -245,11 +246,13 @@
                     durationWrapper.style.display = "flex";
 
                     if (currentStatus === "in game") {
+                        iconImg.style.display = "block"; // 🟢 Show icon layout when in-game
                         badge.className = "live-badge badge-ingame";
                         statusText.innerText = "In Game";
                         detailsText.innerText = "Currently playing Roblox";
                         durationLabel.innerText = "Duration:";
                     } else {
+                        iconImg.style.display = "none";  // 🔵 Hide icon layout when browsing online
                         badge.className = "live-badge badge-online";
                         statusText.innerText = "Online";
                         detailsText.innerText = "Active on the platform";
@@ -264,6 +267,7 @@
                     lastGameId = data.gameId;
 
                 } else {
+                    iconImg.style.display = "none";  // ⚪ Hide icon layout when completely offline
                     durationWrapper.style.display = "none";
 
                     badge.className = "live-badge badge-offline";
