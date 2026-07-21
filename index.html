@@ -8,11 +8,11 @@
         :root {
             --bg-dark: transparent; /* Transparent page background */
             --overlay-bg: rgba(20, 20, 25, 0.29); /* 29% opacity background */
-            --color-offline: #a1a1aa; /* Made lighter for better contrast */
+            --color-offline: #a1a1aa; 
             --color-online: #3b82f6;
             --color-ingame: #22c55e;
-            --text-light: #ffffff;    /* Pure white for primary text */
-            --text-muted: #d4d4d8;    /* Significantly lighter muted text */
+            --text-light: #ffffff;    
+            --text-muted: #d4d4d8;    
         }
 
         body {
@@ -38,6 +38,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.4s ease;
+            box-sizing: border-box;
         }
 
         @keyframes switchFlash {
@@ -50,10 +51,16 @@
             animation: switchFlash 1.2s ease-in-out;
         }
 
+        /* Fixed Header Layout (Prevents Badge Overlap) */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
         .live-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             padding: 6px 12px;
             border-radius: 30px;
             font-size: 0.75rem;
@@ -63,6 +70,8 @@
             align-items: center;
             gap: 6px;
             text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .badge-offline { background-color: rgba(255, 255, 255, 0.1); color: var(--color-offline); }
@@ -90,7 +99,6 @@
             100% { transform: scale(0.9); opacity: 0.6; }
         }
 
-        /* Fixed container dimensions so UI size stays perfectly locked */
         .session-container {
             display: flex;
             align-items: center;
@@ -114,9 +122,9 @@
             display: flex;
             flex-direction: column;
             transition: text-align 0.3s ease;
+            overflow: hidden;
         }
 
-        /* Helper class injected dynamically via JS to center contents */
         .details.centered {
             text-align: center;
             padding-right: 0;
@@ -128,7 +136,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
-            margin-bottom: 4px;
         }
 
         .game-name {
@@ -172,11 +179,12 @@
 <body>
 
     <div class="live-card" id="overlay-card">
-        <div id="status-badge" class="live-badge badge-offline">
-            <div class="pulse-dot"></div> <span id="status-text">Offline</span>
+        <div class="card-header">
+            <div class="status-label">Roblox Status Tracker</div>
+            <div id="status-badge" class="live-badge badge-offline">
+                <div class="pulse-dot"></div> <span id="status-text">Offline</span>
+            </div>
         </div>
-
-        <div class="status-label">Roblox Status Tracker</div>
         
         <div class="session-container">
             <img id="display-icon" class="game-thumbnail" src="https://via.placeholder.com/150/18181b/71717a?text=..." alt="Game Icon">
